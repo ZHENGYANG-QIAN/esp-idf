@@ -339,7 +339,6 @@ void example_ble_mesh_send_gen_onoff_set(bool by_df)
     }
 
     node->onoff = !node->onoff;
-    // board_led_operation(0, 100, 0);
 }
 
 void example_ble_mesh_start_example_configuration(void)
@@ -440,7 +439,6 @@ static void recv_unprov_adv_pkt(uint8_t dev_uuid[16], uint8_t addr[BD_ADDR_LEN],
         ESP_LOGE(TAG, "%s: Add unprovisioned device into queue failed", __func__);
     }
 
-    // board_led_operation(100, 100, 100);
     return;
 }
 
@@ -470,7 +468,6 @@ static void example_ble_mesh_provisioning_cb(esp_ble_mesh_prov_cb_event_t event,
         prov_complete(param->provisioner_prov_complete.node_idx, param->provisioner_prov_complete.device_uuid,
                       param->provisioner_prov_complete.unicast_addr, param->provisioner_prov_complete.element_num,
                       param->provisioner_prov_complete.netkey_idx);
-        // board_led_operation(0, 0, 0);
         break;
     case ESP_BLE_MESH_PROVISIONER_ADD_UNPROV_DEV_COMP_EVT:
         ESP_LOGI(TAG, "ESP_BLE_MESH_PROVISIONER_ADD_UNPROV_DEV_COMP_EVT, err_code %d", param->provisioner_add_unprov_dev_comp.err_code);
@@ -696,7 +693,6 @@ static void example_ble_mesh_generic_client_cb(esp_ble_mesh_generic_client_cb_ev
             node->onoff = param->status_cb.onoff_status.present_onoff;
             ESP_LOGI(TAG, "ESP_BLE_MESH_MODEL_OP_GEN_ONOFF_SET onoff: 0x%02x", node->onoff);
             node->onoff = !node->onoff;
-            // board_led_operation(0,0,0);
             break;
         default:
             break;
@@ -878,7 +874,6 @@ static esp_err_t ble_mesh_init(void)
     example_ble_mesh_store_node_info(dev_uuid, 0x01, 1, 0);
 
     ESP_LOGI(TAG, "BLE Mesh Provisioner initialized");
-    // board_led_operation(0,0,0);
     return err;
 }
 
