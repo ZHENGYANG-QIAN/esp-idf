@@ -100,6 +100,6 @@ static void board_button_init(void)
 
 void board_init(void)
 {
-    board_led_init();
+    // board_led_init();
     board_button_init();
 }

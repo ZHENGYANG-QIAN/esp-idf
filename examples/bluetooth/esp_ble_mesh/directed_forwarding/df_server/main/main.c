@@ -149,7 +149,7 @@ static void prov_complete(uint16_t net_idx, uint16_t addr, uint8_t flags, uint32
     ESP_LOGI(TAG, "net_idx: 0x%04x, addr: 0x%04x", net_idx, addr);
     ESP_LOGI(TAG, "flags: 0x%02x, iv_index: 0x%08" PRIx32, flags, iv_index);
     esp_ble_mesh_node_add_local_app_key(app_key, net_idx, APP_KEY_IDX);
-    board_led_operation(0, 0,0);
+    // board_led_operation(0, 0,0);
 }
 
 static void example_change_led_state(esp_ble_mesh_model_t *model,
@@ -165,10 +165,10 @@ static void example_change_led_state(esp_ble_mesh_model_t *model,
                 if (ctx->recv_op == ESP_BLE_MESH_MODEL_OP_GEN_ONOFF_SET) {
                     if (ctx->recv_cred == ESP_BLE_MESH_DIRECTED_CRED) {
                         // Receive a message send by directed forwarding.
-                        board_led_operation_auto_close(0,0,100,2000);
+                        // board_led_operation_auto_close(0,0,100,2000);
                     } else {
                         // Receive a message send by flooding.
-                        board_led_operation_auto_close(100,0,0,2000);
+                        // board_led_operation_auto_close(100,0,0,2000);
                     }
                 }
             }
@@ -178,10 +178,10 @@ static void example_change_led_state(esp_ble_mesh_model_t *model,
             if (ctx->recv_op == ESP_BLE_MESH_MODEL_OP_GEN_ONOFF_SET) {
                 if (ctx->recv_cred == ESP_BLE_MESH_DIRECTED_CRED) {
                     /* Receive a message send by directed forwarding. */
-                    board_led_operation_auto_close(0,0,100,2000);
+                    // board_led_operation_auto_close(0,0,100,2000);
                 } else {
                     /* Receive a message send by flooding. */
-                    board_led_operation_auto_close(100,0,0,2000);
+                    // board_led_operation_auto_close(100,0,0,2000);
                 }
             }
         }
@@ -189,10 +189,10 @@ static void example_change_led_state(esp_ble_mesh_model_t *model,
         if (ctx->recv_op == ESP_BLE_MESH_MODEL_OP_GEN_ONOFF_SET) {
             if (ctx->recv_cred == ESP_BLE_MESH_DIRECTED_CRED) {
                 /* Receive a message send by directed forwarding. */
-                board_led_operation_auto_close(0,0,100,2000);
+                // board_led_operation_auto_close(0,0,100,2000);
             } else {
                 /* Receive a message send by flooding. */
-                board_led_operation_auto_close(100,0,0,2000);
+                // board_led_operation_auto_close(100,0,0,2000);
             }
         }
     }
@@ -279,7 +279,7 @@ static void example_ble_mesh_provisioning_cb(esp_ble_mesh_prov_cb_event_t event,
                 }
             }
         }
-        board_led_operation_auto_close(50,50,50, 1000);
+        // board_led_operation_auto_close(50,50,50, 1000);
         break;
     }
 
@@ -388,7 +388,7 @@ static void example_ble_mesh_directed_forwarding_server_cb(esp_ble_mesh_df_serve
                 memcpy(&path_origin, &change.df_table_info.df_table_entry_add_remove.path_origin, sizeof(path_origin));
                 memcpy(&path_target, &change.df_table_info.df_table_entry_add_remove.path_target, sizeof(path_target));
                 ESP_LOGI(TAG, "Remove a path from 0x%04x to 0x%04x", path_origin.range_start, path_target.range_start);
-                board_led_operation(0, 0, 0);
+                // board_led_operation(0, 0, 0);
             }
                 break;
             default:
@@ -467,7 +467,7 @@ static esp_err_t ble_mesh_init(void)
 
     ESP_LOGI(TAG, "BLE Mesh Node initialized");
 
-    board_led_operation(0, 0, 0);
+    // board_led_operation(0, 0, 0);
 
     return err;
 }

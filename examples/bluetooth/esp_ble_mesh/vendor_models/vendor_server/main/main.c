@@ -157,22 +157,25 @@ static void example_ble_mesh_custom_model_cb(esp_ble_mesh_model_cb_event_t event
     switch (event) {
     case ESP_BLE_MESH_MODEL_OPERATION_EVT:
         if (param->model_operation.opcode == ESP_BLE_MESH_VND_MODEL_OP_SEND) {
-            uint16_t tid = *(uint16_t *)param->model_operation.msg;
-            ESP_LOGI(TAG, "Recv 0x%06" PRIx32 ", tid 0x%04x", param->model_operation.opcode, tid);
+            uint8_t* msg = (uint8_t *)param->model_operation.msg;
+            uint8_t tid = msg[0];
+            uint8_t len = msg[1];
+            ESP_LOGI("Server", "Recv 0x%06" PRIx32 ", tid 0x%02x, len 0x%02x", param->model_operation.opcode, tid, len);
+            ESP_LOG_BUFFER_HEX("Msg", msg + 2, len);
             esp_err_t err = esp_ble_mesh_server_model_send_msg(&vnd_models[0],
                     param->model_operation.ctx, ESP_BLE_MESH_VND_MODEL_OP_STATUS,
-                    sizeof(tid), (uint8_t *)&tid);
+                    sizeof(msg), (uint8_t *)msg);
             if (err) {
-                ESP_LOGE(TAG, "Failed to send message 0x%06x", ESP_BLE_MESH_VND_MODEL_OP_STATUS);
+                ESP_LOGE("Server", "Failed to send message 0x%06x", ESP_BLE_MESH_VND_MODEL_OP_STATUS);
             }
         }
         break;
     case ESP_BLE_MESH_MODEL_SEND_COMP_EVT:
         if (param->model_send_comp.err_code) {
-            ESP_LOGE(TAG, "Failed to send message 0x%06" PRIx32, param->model_send_comp.opcode);
+            ESP_LOGE("Server", "Failed to send message 0x%06" PRIx32, param->model_send_comp.opcode);
             break;
         }
-        ESP_LOGI(TAG, "Send 0x%06" PRIx32, param->model_send_comp.opcode);
+        ESP_LOGI("Server", "Send 0x%06" PRIx32, param->model_send_comp.opcode);
         break;
     default:
         break;

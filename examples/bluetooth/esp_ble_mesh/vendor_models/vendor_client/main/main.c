@@ -468,8 +468,17 @@ void example_ble_mesh_send_vendor_message(bool resend)
         store.vnd_tid++;
     }
 
+    uint8_t head_size = 2;
+    uint8_t body_size = 48;
+    uint8_t msg[head_size + body_size];
+    msg[0] = (uint8_t)store.vnd_tid;
+    msg[1] = body_size;
+    for (int i = 0; i < body_size; i++) {
+        msg[i + head_size] = i;
+    }
+
     err = esp_ble_mesh_client_model_send_msg(vendor_client.model, &ctx, opcode,
-            sizeof(store.vnd_tid), (uint8_t *)&store.vnd_tid, MSG_TIMEOUT, true, MSG_ROLE);
+            sizeof(msg), (uint8_t *)msg, MSG_TIMEOUT, true, MSG_ROLE);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "Failed to send vendor message 0x%06" PRIx32, opcode);
         return;
@@ -487,23 +496,26 @@ static void example_ble_mesh_custom_model_cb(esp_ble_mesh_model_cb_event_t event
     case ESP_BLE_MESH_MODEL_OPERATION_EVT:
         if (param->model_operation.opcode == ESP_BLE_MESH_VND_MODEL_OP_STATUS) {
             int64_t end_time = esp_timer_get_time();
-            ESP_LOGI(TAG, "Recv 0x06%" PRIx32 ", tid 0x%04x, time %lldus",
-                param->model_operation.opcode, store.vnd_tid, end_time - start_time);
+            uint8_t* msg = (uint8_t *)param->model_operation.msg;
+            uint8_t tid = msg[0];
+            uint8_t len = msg[1];
+            ESP_LOGI("Client", "Recv 0x%06" PRIx32 ", tid 0x%02x, len 0x%02x, time %lldus", param->model_operation.opcode, tid, len, end_time - start_time);
+            // ESP_LOG_BUFFER_HEX("Msg", msg + 2, len);
         }
         break;
     case ESP_BLE_MESH_MODEL_SEND_COMP_EVT:
         if (param->model_send_comp.err_code) {
-            ESP_LOGE(TAG, "Failed to send message 0x%06" PRIx32, param->model_send_comp.opcode);
+            ESP_LOGE("Client", "Failed to send message 0x%06" PRIx32, param->model_send_comp.opcode);
             break;
         }
         start_time = esp_timer_get_time();
-        ESP_LOGI(TAG, "Send 0x%06" PRIx32, param->model_send_comp.opcode);
+        ESP_LOGI("Client", "Send 0x%06" PRIx32, param->model_send_comp.opcode);
         break;
     case ESP_BLE_MESH_CLIENT_MODEL_RECV_PUBLISH_MSG_EVT:
-        ESP_LOGI(TAG, "Receive publish message 0x%06" PRIx32, param->client_recv_publish_msg.opcode);
+        ESP_LOGI("Client", "Receive publish message 0x%06" PRIx32, param->client_recv_publish_msg.opcode);
         break;
     case ESP_BLE_MESH_CLIENT_MODEL_SEND_TIMEOUT_EVT:
-        ESP_LOGW(TAG, "Client message 0x%06" PRIx32 " timeout", param->client_send_timeout.opcode);
+        ESP_LOGW("Client", "Client message 0x%06" PRIx32 " timeout", param->client_send_timeout.opcode);
         example_ble_mesh_send_vendor_message(true);
         break;
     default:
