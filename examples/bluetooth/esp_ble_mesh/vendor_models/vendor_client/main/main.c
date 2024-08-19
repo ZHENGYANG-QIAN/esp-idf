@@ -175,6 +175,7 @@ static esp_err_t prov_complete(uint16_t node_index, const esp_ble_mesh_octet16_t
     ESP_LOG_BUFFER_HEX("uuid", uuid, ESP_BLE_MESH_OCTET16_LEN);
 
     store.server_addr = primary_addr;
+    store.vnd_tid = 0;
     mesh_example_info_store(); /* Store proper mesh example info */
 
     sprintf(name, "%s%02x", "NODE-", node_index);
