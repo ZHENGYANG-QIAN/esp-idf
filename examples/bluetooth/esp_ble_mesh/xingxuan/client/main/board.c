@@ -21,19 +21,20 @@
 #define BUTTON_ACTIVE_LEVEL     0
 
 extern void example_ble_mesh_start_example_configuration(void);
-extern void example_ble_mesh_send_gen_onoff_set(bool by_df);
+extern void example_ble_mesh_send_df_vendor_message(bool by_df);
 extern uint8_t in_configuration_phase;
 
 static void button_tap_cb(void* arg)
 {
     ESP_LOGI(TAG, "tap cb (%s)", (char *)arg);
-    static bool use_df = true;
-    if (in_configuration_phase) {
-        example_ble_mesh_start_example_configuration();
-    } else {
-        example_ble_mesh_send_gen_onoff_set(use_df);
-        use_df = !use_df;
-    }
+    example_ble_mesh_send_df_vendor_message(true);
+    // static bool use_df = true;
+    // if (in_configuration_phase) {
+    //     example_ble_mesh_start_example_configuration();
+    // } else {
+    //     example_ble_mesh_send_df_vendor_message(use_df);
+    //     use_df = !use_df;
+    // }
 }
 
 static void board_button_init(void)
